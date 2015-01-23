@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="utf-8">
+		<title>AMD loader test</title>
+		<link rel="stylesheet" href="../../node_modules/mocha/mocha.css" type="text/css">
+		<link rel="stylesheet" href="../../test/browser/debug.css" type="text/css">
+	</head>
+	<body>
+
+		<div id="mocha"></div>
+		<div id="debug"></div>
+
+		<script src="../../node_modules/mocha/mocha.js"></script>
+		<script src="../../node_modules/chai/chai.js"></script>
+		<script src="../../node_modules/requirejs/require.js"></script>
+		<script src="../../test/browser/setup.js"></script>
+
+		<script>
+			require.config({
+				baseUrl: '../../',
+				paths: {
+					view: 'plugin/loader'
+				},
+				config: {
+					view: {
+						i18n: 'plugin/lib/i18n'
+					}
+				}
+			});
+		</script>
+
+
+		<script src="../../test/browser/testSpec.js"></script>
+		<script src="../../test/browser/i18nSpec.js"></script>
+
+		<script>
+			if (navigator.userAgent.indexOf('PhantomJS') < 0) {
+				mocha.run();
+			}
+		</script>
+
+	</body>
+</html>
