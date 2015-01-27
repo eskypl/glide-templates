@@ -10,6 +10,9 @@
   "contributors": [
     "Krzysztof Winiarski <krzysztof.winiarski@esky.com>"
   ],
+  "scripts": {
+    "test": "grunt test"
+  },
   "keywords": [
     "amd",
     "requirejs",
