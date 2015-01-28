@@ -5,17 +5,19 @@ function amdCleanFactory(config) {
 	return function (data) {
 		fs.writeFileSync(data.path, amdclean.clean({
 			filePath: data.path,
+			removeUseStricts: false,
+			removeAllRequires: false,
+			prefixMode: 'camelCase',
 			wrap: {
 				start: '(function (root, factory) {'
-				+ '\'use strict\';'
-				+ 'if (typeof define === \'function\' && define.amd) {'
-				+ 'define([], factory);'
-				+ '} else if (typeof exports === \'object\') {'
-				+ 'module.exports = factory();'
-				+ '}'
-				+ '}(this, function () {',
-				end: 'return ' + config.returnModule + ';'
-				+ '}));'
+				+ '\u000A  if (typeof define === \'function\' && define.amd) {'
+				+ '\u000A    define(factory);'
+				+ '\u000A  } else if (typeof exports === \'object\') {'
+				+ '\u000A    module.exports = factory();'
+				+ '\u000A  }'
+				+ '\u000A}(this, function () {\u000A',
+				end: '\u000Areturn ' + config.returnModule + ';'
+				+ '\u000A}));\u000A'
 			}
 		}));
 	};
@@ -68,8 +70,8 @@ module.exports = function (grunt) {
 				options: {
 					baseUrl: './',
 					paths: {
-						view: 'plugin/optimizer',
-						builder: 'plugin/builder'
+						view: 'dist/optimizer',
+						builder: 'dist/builder'
 					},
 					include: ['view!test/examples/table.tpl', 'view!test/examples/deep-include.tpl', 'test/fixtures/colors'],
 					out: '.grunt/build.js',
@@ -83,7 +85,7 @@ module.exports = function (grunt) {
 					out: 'dist/optimizer.js',
 					optimize: 'none',
 					onModuleBundleComplete: amdCleanFactory({
-						returnModule: 'plugin_optimizer'
+						returnModule: 'pluginOptimizer'
 					})
 				}
 			},
@@ -94,7 +96,7 @@ module.exports = function (grunt) {
 					out: 'dist/builder.js',
 					optimize: 'none',
 					onModuleBundleComplete: amdCleanFactory({
-						returnModule: 'plugin_builder'
+						returnModule: 'pluginBuilder'
 					})
 				}
 			},
@@ -105,7 +107,7 @@ module.exports = function (grunt) {
 					out: 'dist/loader.js',
 					optimize: 'none',
 					onModuleBundleComplete: amdCleanFactory({
-						returnModule: 'plugin_loader'
+						returnModule: 'pluginLoader'
 					})
 				}
 			}

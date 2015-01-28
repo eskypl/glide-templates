@@ -1,5 +1,13 @@
-(function (root, factory) {if (typeof define === 'function' && define.amd) {define([], factory);} else if (typeof exports === 'object') {module.exports = factory();}}(this, function () {var plugin_syntax_smarty, plugin_syntax_twig, plugin_syntax_main, plugin_lib_compiler, plugin_lib_i18n, plugin_lib_templates, plugin_loader;
-plugin_syntax_smarty = function () {
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory();
+  }
+}(this, function () {
+  
+var pluginSyntaxSmarty, pluginSyntaxTwig, pluginSyntaxMain, pluginLibCompiler, pluginLibI18n, pluginLibTemplates, pluginLoader;
+pluginSyntaxSmarty = function () {
   
   function Smarty(_tagReplacementTable) {
     this.tagResolvers = {};
@@ -36,7 +44,7 @@ plugin_syntax_smarty = function () {
   };
   return Smarty;
 }();
-plugin_syntax_twig = function () {
+pluginSyntaxTwig = function () {
   
   function Twig(_tagReplacementTable) {
     this.tagResolvers = [];
@@ -91,7 +99,7 @@ plugin_syntax_twig = function () {
   };
   return Twig;
 }();
-plugin_syntax_main = function (Smarty, Twig) {
+pluginSyntaxMain = function (Smarty, Twig) {
   
   var registry = {
     smarty: Smarty,
@@ -196,8 +204,8 @@ plugin_syntax_main = function (Smarty, Twig) {
     }
     return new registry[syntaxName](tagReplacementTable);
   };
-}(plugin_syntax_smarty, plugin_syntax_twig);
-plugin_lib_compiler = function (SyntaxFactory) {
+}(pluginSyntaxSmarty, pluginSyntaxTwig);
+pluginLibCompiler = function (SyntaxFactory) {
   
   var whitespace = /^\s*|\r|\n|\t|\s*$/g;
   var quotes = /"/g;
@@ -244,8 +252,8 @@ plugin_lib_compiler = function (SyntaxFactory) {
     }
   }
   return parse;
-}(plugin_syntax_main);
-plugin_lib_i18n = function () {
+}(pluginSyntaxMain);
+pluginLibI18n = function () {
   
   var doc = typeof document === 'object' ? document : false;
   var jsonPathSep = '.';
@@ -304,7 +312,7 @@ plugin_lib_i18n = function () {
     }
   };
 }();
-plugin_lib_templates = function (i18n) {
+pluginLibTemplates = function (i18n) {
   
   function Template(_fn, _name) {
     var ctx;
@@ -415,8 +423,8 @@ plugin_lib_templates = function (i18n) {
     t: i18n.translate
   };
   return Template;
-}(plugin_lib_i18n);
-plugin_loader = function (module, compile, Template) {
+}(pluginLibI18n);
+pluginLoader = function (module, compile, Template) {
   
   function extension(filePath) {
     var ext = filePath.match(/\.(\w+)$/i);
@@ -460,4 +468,6 @@ plugin_loader = function (module, compile, Template) {
       xhr.send(null);
     }
   };
-}({}, plugin_lib_compiler, plugin_lib_templates);return plugin_loader;}));
+}({}, pluginLibCompiler, pluginLibTemplates);
+return pluginLoader;
+}));
