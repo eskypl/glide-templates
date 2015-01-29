@@ -53,7 +53,7 @@ define(['plugin/lib/compiler'], function (compile) {
 			buildMap[_name] = fn;
 
 			if (!!fn.deps.length) {
-				require(fn.deps);
+				_req(fn.deps);
 			}
 
 			_onload();

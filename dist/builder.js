@@ -1,5 +1,13 @@
-(function (root, factory) {if (typeof define === 'function' && define.amd) {define([], factory);} else if (typeof exports === 'object') {module.exports = factory();}}(this, function () {var plugin_syntax_smarty, plugin_syntax_twig, plugin_syntax_main, plugin_lib_compiler, plugin_builder;
-plugin_syntax_smarty = function () {
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory();
+  }
+}(this, function () {
+  
+var pluginSyntaxSmarty, pluginSyntaxTwig, pluginSyntaxMain, pluginLibCompiler, pluginBuilder;
+pluginSyntaxSmarty = function () {
   
   function Smarty(_tagReplacementTable) {
     this.tagResolvers = {};
@@ -36,7 +44,7 @@ plugin_syntax_smarty = function () {
   };
   return Smarty;
 }();
-plugin_syntax_twig = function () {
+pluginSyntaxTwig = function () {
   
   function Twig(_tagReplacementTable) {
     this.tagResolvers = [];
@@ -91,7 +99,7 @@ plugin_syntax_twig = function () {
   };
   return Twig;
 }();
-plugin_syntax_main = function (Smarty, Twig) {
+pluginSyntaxMain = function (Smarty, Twig) {
   
   var registry = {
     smarty: Smarty,
@@ -196,8 +204,8 @@ plugin_syntax_main = function (Smarty, Twig) {
     }
     return new registry[syntaxName](tagReplacementTable);
   };
-}(plugin_syntax_smarty, plugin_syntax_twig);
-plugin_lib_compiler = function (SyntaxFactory) {
+}(pluginSyntaxSmarty, pluginSyntaxTwig);
+pluginLibCompiler = function (SyntaxFactory) {
   
   var whitespace = /^\s*|\r|\n|\t|\s*$/g;
   var quotes = /"/g;
@@ -244,8 +252,8 @@ plugin_lib_compiler = function (SyntaxFactory) {
     }
   }
   return parse;
-}(plugin_syntax_main);
-plugin_builder = function (compile) {
+}(pluginSyntaxMain);
+pluginBuilder = function (compile) {
   
   var buildMap = {};
   var matchModuleName = /^\w+!(.+?)\.\w+$/i;
@@ -286,6 +294,7 @@ plugin_builder = function (compile) {
       var fn = compile(file, extension(_name));
       buildMap[_name] = fn;
       if (!!fn.deps.length) {
+        _req(fn.deps);
       }
       _onload();
     },
@@ -305,4 +314,6 @@ plugin_builder = function (compile) {
       _write.asModule(normalizedName, 'define(' + fndeps + 'function(){' + fnbody + ';' + fnincl + 'return ' + functionName + ';});');
     }
   };
-}(plugin_lib_compiler);return plugin_builder;}));
+}(pluginLibCompiler);
+return pluginBuilder;
+}));
