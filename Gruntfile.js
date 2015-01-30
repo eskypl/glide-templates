@@ -25,47 +25,67 @@ function amdCleanFactory(config) {
 
 module.exports = function (grunt) {
 
-	grunt.loadNpmTasks('grunt-contrib-clean');
-	grunt.loadNpmTasks('grunt-contrib-requirejs');
-	grunt.loadNpmTasks('grunt-contrib-jshint');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-mocha');
-	grunt.loadNpmTasks('grunt-mocha-test');
+	function readCodeclimateTokenFile() {
+		var filename = './codeclimate.txt';
+		if (grunt.file.exists(filename)) {
+			return grunt.file.read('codeclimate.txt', { encoding: 'utf8' }).trim();
+		}
+	}
+
+	var CODECLIMATE_REPO_TOKEN = process.env.CODECLIMATE_REPO_TOKEN
+		|| readCodeclimateTokenFile();
 
 	grunt.initConfig({
 		mochaTest: {
 			node: {
-				src: ['test/node/*Spec.js']
+				src: ['.grunt/test/node/*Spec.js'],
+				options: {
+					reporter: 'html-cov',
+					captureFile: '.grunt/coverage-node.html',
+					quiet: true
+				}
 			}
 		},
-		mocha: {
-			options: {
-				reporter: 'Spec',
-				logErrors: true,
-				log: true,
-				run: true
-			},
-			browser: {
-				src: ['test/browser/*.html']
-			}
-		},
+		//mocha: {
+		//	options: {
+		//		reporter: 'HTMLCov',
+		//		run: true
+		//	},
+		//	browser: {
+		//		src: ['.grunt/test/browser/*.html'],
+		//		dest: '.grunt/coverage-browser.html'
+		//	}
+		//},
 		clean: {
 			test: ['.grunt'],
 			dist: ['dist']
 		},
-		requirejs: {
-			bench: {
-				options: {
-					baseUrl: './',
-					paths: {
-						legacy: 'bench/legacy',
-						jquery: 'empty:'
-					},
-					name: 'bench/legacy/view',
-					out: '.grunt/legacy.js',
-					optimize: 'none'
+		copy: {
+			testFiles: {
+				src: ['test/**', 'dist/*.js', '!dist/*.min.js'],
+				dest: '.grunt/'
+			}
+		},
+		blanket: {
+			buildFiles: {
+				files: {
+					'.grunt/dist/': ['dist']
 				}
-			},
+			}
+		},
+		requirejs: {
+			//bench: {
+			//	options: {
+			//		baseUrl: './',
+			//		paths: {
+			//			legacy: 'bench/legacy',
+			//			jquery: 'empty:'
+			//		},
+			//		name: 'bench/legacy/view',
+			//		out: '.grunt/legacy.js',
+			//		optimize: 'none'
+			//	}
+			//},
 			test: {
 				options: {
 					baseUrl: './',
@@ -74,6 +94,7 @@ module.exports = function (grunt) {
 						builder: 'dist/builder'
 					},
 					include: ['view!test/examples/table.tpl', 'view!test/examples/deep-include.tpl', 'test/fixtures/colors'],
+					exclude: ['dist/optimizer', 'dist/builder'],
 					out: '.grunt/build.js',
 					optimize: 'none'
 				}
@@ -121,12 +142,36 @@ module.exports = function (grunt) {
 		},
 		jshint: {
 			all: ['plugin/**/*.js', 'test/**/*Spec.js']
+		},
+		karma: {
+			all: {
+				configFile: 'karma.conf.js'
+			}
+		},
+		codeclimate: {
+			options: {
+				file: '<%= destDir %>/coverage.lcov',
+				token: CODECLIMATE_REPO_TOKEN
+			}
 		}
 	});
 
-	grunt.registerTask('build', ['clean:dist', 'requirejs:optimizer', 'requirejs:builder', 'requirejs:loader', 'uglify']);
-	grunt.registerTask('lint', ['jshint']);
-	grunt.registerTask('test', ['requirejs:test', 'mochaTest', 'mocha', 'clean:test']);
+	[
+		'grunt-contrib-clean',
+		'grunt-contrib-copy',
+		'grunt-contrib-requirejs',
+		'grunt-contrib-jshint',
+		'grunt-contrib-uglify',
+		'grunt-karma',
+		'grunt-mocha-test',
+		'grunt-blanket',
+		'grunt-codeclimate'
+	].forEach(grunt.loadNpmTasks);
 
+	grunt.registerTask('build', ['requirejs:optimizer', 'requirejs:builder', 'requirejs:loader']);
+	grunt.registerTask('dist', ['build', 'uglify']);
+	grunt.registerTask('lint', ['jshint']);
+	//grunt.registerTask('test', ['requirejs:test', 'mochaTest']);
+	grunt.registerTask('test', ['clean', 'build', 'requirejs:test', 'copy', 'karma']);
 	grunt.registerTask('default', ['lint', 'test']);
 };

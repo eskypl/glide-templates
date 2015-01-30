@@ -5,7 +5,6 @@
     module.exports = factory();
   }
 }(this, function () {
-  
 var pluginSyntaxSmarty, pluginSyntaxTwig, pluginSyntaxMain, pluginLibCompiler, pluginBuilder;
 pluginSyntaxSmarty = function () {
   

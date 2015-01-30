@@ -1,6 +1,16 @@
-require(['plugin/lib/i18n'], function (i18n) {
+var i18n = {
+	test: {
+		Showing_table_type: 'Table type: {{type}} {$2}.',
+		Showing_table_type_old: 'Table type: {$1} {$2}.',
+		Showing_table_type_old_ext: 'Table type: {1} {2}.',
+		Showing_table_type_new: 'Table type: {{type}} {{info}}.',
+		Showing_table_type_new_ext: 'Table type: {{$type}} {{$info}}.'
+	}
+};
 
-	var translate = i18n.translate;
+define(['view'], function (view) {
+
+	var translate = view.translate;
 
 	describe('i18n module', function () {
 

@@ -32,6 +32,8 @@ define(['plugin/lib/i18n'], function (i18n) {
 		return tpl;
 	}
 
+	Template.translator = i18n;
+
 	Template.prototype = {
 		/**
 		 * Returns information about object in a loop. During iteration

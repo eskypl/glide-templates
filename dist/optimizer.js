@@ -5,7 +5,6 @@
     module.exports = factory();
   }
 }(this, function () {
-  
 var pluginLibI18n, pluginLibTemplates, pluginOptimizer;
 pluginLibI18n = function () {
   
@@ -94,6 +93,7 @@ pluginLibTemplates = function (i18n) {
     tpl.fn = _fn;
     return tpl;
   }
+  Template.translator = i18n;
   Template.prototype = {
     /**
      * Returns information about object in a loop. During iteration
@@ -184,6 +184,7 @@ pluginOptimizer = function (Template) {
   return {
     version: '1.0.0',
     pluginBuilder: 'builder',
+    translate: Template.translator.translate,
     normalize: function (_name) {
       return _name.replace(fileExtension, '');
     },
