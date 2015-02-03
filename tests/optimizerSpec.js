@@ -1,13 +1,12 @@
-/* global insert */
 /* jshint -W024, -W030 */
 define([
 	'view!tests/fixtures/table',
 	'view!tests/fixtures/deep-include',
 	'tests/fixtures/colors'
 ], function (tpl, deep, data) {
+	'use strict';
 
 	describe('AMD optimizer plugin', function () {
-		'use strict';
 
 		describe('when requesting template', function () {
 
@@ -46,8 +45,6 @@ define([
 					_done();
 				});
 			});
-
-
 		});
 	});
 });
