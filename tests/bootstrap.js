@@ -29,15 +29,9 @@ var i18n = {
   }
 };
 
-
-console.log(allTestFiles);
-
 requirejs.config({
   // Karma serves files under /base, which is the basePath from your config file
   baseUrl: '/base',
-  //paths: {
-  //  chai: 'node_modules/chai'
-  //},
   map: {
     '*': {
       view: 'plugin/loader'

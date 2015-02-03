@@ -2,8 +2,6 @@ define([
 	'plugin/builder'
 ], function (builder) {
 	var compile = builder.compile;
-	console.log(Object.keys(chai));
-
 
 	chai.Assertion.addProperty('smarty', function () {
 		'use strict';
