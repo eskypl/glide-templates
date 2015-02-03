@@ -31,3 +31,6 @@ node_modules
 
 # JetBrains
 .idea
+
+# Code Climate Token
+codeclimate.txt
