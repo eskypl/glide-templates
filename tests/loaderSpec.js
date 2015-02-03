@@ -8,14 +8,13 @@ define([
 
 	describe('AMD loader plugin', function () {
 
-
 		describe('when requesting template', function () {
 
 			it('should load compiled template function', function () {
 				expect(tpl).to.be.a('function');
 			});
 
-			it('should succesfuly render loaded template function when called with data', function (_done) {
+			it('should successfully render loaded template function when called with data', function (_done) {
 				tpl(data, function (_error, _result) {
 					expect(_error).to.be.null;
 					expect(_result).to.be.a('string');
@@ -23,7 +22,7 @@ define([
 				});
 			});
 
-			it('should succesfuly render loaded template function when called with data (summary)', function (_done) {
+			it('should successfully render loaded template function when called with data (summary)', function (_done) {
 				tpl(data.extendWith({showTable: 'summary'}), function (_error, _result) {
 					expect(_error).to.be.null;
 					expect(_result).to.be.a('string');
@@ -31,7 +30,7 @@ define([
 				});
 			});
 
-			it('should succesfuly render loaded template function when called with data (full)', function (_done) {
+			it('should successfully render loaded template function when called with data (full)', function (_done) {
 				tpl(data.extendWith({showTable: 'full'}), function (_error, _result) {
 					expect(_error).to.be.null;
 					expect(_result).to.be.a('string');

@@ -11,21 +11,21 @@ pluginSyntaxSmarty = function () {
   function Smarty(_tagReplacementTable) {
     this.tagResolvers = {};
     this.deps = [];
-    for (var i in this.tagDefinisions) {
+    for (var i in this.tagDefinitions) {
       this.tagResolvers[i] = this.compileTag(i, _tagReplacementTable[i]);
     }
   }
   Smarty.prototype = {
     compileTag: function (_tagType, _tagReplacement) {
       return [
-        new RegExp('{' + this.tagDefinisions[_tagType] + '}', 'g'),
+        new RegExp('{' + this.tagDefinitions[_tagType] + '}', 'g'),
         this.giveContext(_tagReplacement)
       ];
     },
     getResolvedDependencies: function () {
       return this.deps || [];
     },
-    tagDefinisions: {
+    tagDefinitions: {
       conditional: 'if\\s+(.+?)',
       conditionalElse: 'else',
       conditionalElseIf: 'else\\s+(.+?)',
@@ -48,14 +48,14 @@ pluginSyntaxTwig = function () {
   function Twig(_tagReplacementTable) {
     this.tagResolvers = [];
     this.deps = [];
-    for (var i in this.tagDefinisions) {
+    for (var i in this.tagDefinitions) {
       this.tagResolvers[i] = this.compileTag(i, _tagReplacementTable[i]);
     }
   }
   Twig.prototype = {
     compileTag: function (_tagType, _tagReplacement) {
       var regexp;
-      var expression = this.tagDefinisions[_tagType];
+      var expression = this.tagDefinitions[_tagType];
       var search = expression;
       var replace = _tagReplacement;
       if (expression instanceof Array) {
@@ -77,7 +77,7 @@ pluginSyntaxTwig = function () {
     getResolvedDependencies: function () {
       return this.deps || [];
     },
-    tagDefinisions: {
+    tagDefinitions: {
       conditional: 'if\\s+(.+?)',
       conditionalElse: 'else',
       conditionalElseIf: 'else\\s+(.+?)',
@@ -200,7 +200,7 @@ pluginSyntaxMain = function (Smarty, Twig) {
     }
     var syntaxName = _syntaxName.toLowerCase();
     if (!registry[syntaxName]) {
-      throw 'Unsupported templateing syntax style';
+      throw 'Unsupported templating syntax style';
     }
     return new registry[syntaxName](tagReplacementTable);
   };

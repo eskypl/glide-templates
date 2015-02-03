@@ -122,7 +122,7 @@ define([
 		var syntaxName = _syntaxName.toLowerCase();
 
 		if (!registry[syntaxName]) {
-			throw 'Unsupported templateing syntax style';
+			throw 'Unsupported templating syntax style';
 		}
 
 		return new registry[syntaxName](tagReplacementTable);
