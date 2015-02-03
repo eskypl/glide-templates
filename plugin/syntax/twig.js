@@ -6,7 +6,9 @@ define(function () {
 		this.deps = [];
 
 		for (var i in this.tagDefinitions) {
-			this.tagResolvers[i] = this.compileTag(i, _tagReplacementTable[i]);
+			if (this.tagDefinitions.hasOwnProperty(i)) {
+				this.tagResolvers[i] = this.compileTag(i, _tagReplacementTable[i]);
+			}
 		}
 	}
 

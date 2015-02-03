@@ -12,7 +12,9 @@ pluginSyntaxSmarty = function () {
     this.tagResolvers = {};
     this.deps = [];
     for (var i in this.tagDefinitions) {
-      this.tagResolvers[i] = this.compileTag(i, _tagReplacementTable[i]);
+      if (this.tagDefinitions.hasOwnProperty(i)) {
+        this.tagResolvers[i] = this.compileTag(i, _tagReplacementTable[i]);
+      }
     }
   }
   Smarty.prototype = {
@@ -49,7 +51,9 @@ pluginSyntaxTwig = function () {
     this.tagResolvers = [];
     this.deps = [];
     for (var i in this.tagDefinitions) {
-      this.tagResolvers[i] = this.compileTag(i, _tagReplacementTable[i]);
+      if (this.tagDefinitions.hasOwnProperty(i)) {
+        this.tagResolvers[i] = this.compileTag(i, _tagReplacementTable[i]);
+      }
     }
   }
   Twig.prototype = {
@@ -148,8 +152,9 @@ pluginSyntaxMain = function (Smarty, Twig) {
         data = variablesToJSON(_variables);
       }
       // TODO: Template should be configurable: view! and .tpl should not be hardcoded.
+      // // https://github.com/eskypl/glide-templates/issues/6
       this.deps.push('view!' + _templateName + '.tpl');
-      return '"+_this.f(' + (this.deps.length - 1) + ',' + (data ? data : '$tpl') + ')+"';  //return '';
+      return '"+_this.f(' + (this.deps.length - 1) + ',' + (data ? data : '$tpl') + ')+"';
     },
     translate: function (_string, _key, _variables) {
       var data = '';
@@ -225,28 +230,30 @@ pluginLibCompiler = function (SyntaxFactory) {
     }
     return _template;
   }
-  function optimize(_fnbody) {
-    return _fnbody.replace(/_\+="";/g, '').replace(/=""\+/g, '=').replace(/\+"";/g, ';');
+  function optimize(_fnBody) {
+    return _fnBody.replace(/_\+="";/g, '').replace(/=""\+/g, '=').replace(/\+"";/g, ';');
   }
   function parse(_template, _style) {
     var fn;
-    var fnbody = sanitize(_template);
+    var fnBody = sanitize(_template);
     var syntaxStyle = syntax[styles[_style]];
     var syntaxCompiler = new SyntaxFactory(syntaxStyle);
     var syntaxResolver = syntaxCompiler.tagResolvers;
     for (var i in syntaxResolver) {
-      fnbody = fnbody.replace(syntaxResolver[i][0], syntaxResolver[i][1]);
+      if (syntaxResolver.hasOwnProperty(i)) {
+        fnBody = fnBody.replace(syntaxResolver[i][0], syntaxResolver[i][1]);
+      }
     }
-    fnbody = optimize('var _this=this,_="";_+="' + fnbody + '";return _;');
+    fnBody = optimize('var _this=this,_="";_+="' + fnBody + '";return _;');
     try {
       /* jshint -W054 */
-      fn = new Function('$tpl', fnbody);
+      fn = new Function('$tpl', fnBody);
       /* jshint +W054 */
       fn.deps = syntaxCompiler.getResolvedDependencies();
       return fn;
     } catch (_error) {
       if (_error instanceof SyntaxError) {
-        _error.message += ' in "' + fnbody + '"';
+        _error.message += ' in "' + fnBody + '"';
       }
       throw 'Template compilation error: ' + _error.stack || _error.message;
     }
@@ -321,8 +328,7 @@ pluginLibTemplates = function (i18n) {
       throw new Error('Template not initialized with new');
     }
     /**
-     * List of dependencies. Dependencies are resolved during
-     * render phase.
+     * List of dependencies. Dependencies are resolved during render phase.
      * @type {Object}
      */
     this.deps = _fn.deps || [];
@@ -348,10 +354,10 @@ pluginLibTemplates = function (i18n) {
     /**
      * Returns information about object in a loop. During iteration
      * key, index and total number of items is given.
-     * @param key
-     * @param index
-     * @param total
-     * @returns {{key: *, index: *, total: *, number: *, last: boolean, first: boolean}}
+     * @param _key {string|number}
+     * @param _index {string|number}
+     * @param _total {number}
+     * @returns {{key: *, index: *, total: *, number: *, last: boolean, first: boolean, even: boolean, odd: boolean}}
      */
     i: function info(_key, _index, _total) {
       var number = _index + 1;
@@ -369,8 +375,8 @@ pluginLibTemplates = function (i18n) {
     },
     /**
      * Iterates over objects inside templates.
-     * @param data
-     * @param callback
+     * @param _data {object}
+     * @param _callback {function}
      */
     e: function each(_data, _callback) {
       var total;
@@ -394,7 +400,7 @@ pluginLibTemplates = function (i18n) {
     },
     /**
      * Calculates total number of items in the given object.
-     * @param object
+     * @param _object {object}
      * @returns {number}
      */
     c: function count(_object) {
@@ -410,11 +416,10 @@ pluginLibTemplates = function (i18n) {
       return counter;
     },
     /**
-     * Helper function to fetch additional template. Used by
-     * {include} statement.
-     * @param moduleName
-     * @param data
-     * @returns {String}
+     * Helper function to fetch additional template. Used by {include} statement.
+     * @param _moduleIndex {number}
+     * @param _data {object}
+     * @returns {string} Template rendered with provided data
      */
     f: function fetch(_moduleIndex, _data) {
       var fn = this.includes[_moduleIndex].fn;
@@ -437,7 +442,7 @@ pluginLoader = function (compile, Template) {
     }
     return ext;
   }
-  function load(_moduleName, _text, _req, _onload) {
+  function load(_moduleName, _text, _req, _onLoad) {
     var templateFn = compile(_text, extension(_moduleName));
     templateFn.includes = [];
     if (templateFn.deps && !!templateFn.deps.length) {
@@ -445,28 +450,28 @@ pluginLoader = function (compile, Template) {
         for (var i = 0, j = templateFn.deps.length; i < j; i++) {
           templateFn.includes.push(arguments[i]);
         }
-        _onload(new Template(templateFn, _moduleName));
+        _onLoad(new Template(templateFn, _moduleName));
       });
     } else {
-      _onload(new Template(templateFn, _moduleName));
+      _onLoad(new Template(templateFn, _moduleName));
     }
   }
   return {
     version: '1.0.0',
     translate: Template.translator.translate,
-    load: function (_moduleName, _req, _onload) {
+    load: function (_moduleName, _req, _onLoad) {
       var xhr = new XMLHttpRequest();
       xhr.open('GET', _req.toUrl(_moduleName), true);
       xhr.onreadystatechange = function () {
         var status = xhr.status || 0;
         if (xhr.readyState === 4) {
           if (status > 399 && status < 600) {
-            return _onload.error(new Error(_moduleName + ' HTTP status: ' + status));
+            return _onLoad.error(new Error(_moduleName + ' HTTP status: ' + status));
           }
           try {
-            load(_moduleName, xhr.responseText, _req, _onload);
+            load(_moduleName, xhr.responseText, _req, _onLoad);
           } catch (_error) {
-            _onload.error(_error);
+            _onLoad.error(_error);
           }
         }
       };
