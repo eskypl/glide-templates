@@ -19,27 +19,29 @@ define(['plugin/syntax/main'], function (SyntaxFactory) {
 		return _template;
 	}
 
-	function optimize(_fnbody) {
-		return _fnbody.replace(/_\+="";/g, '').replace(/=""\+/g, '=').replace(/\+"";/g, ';');
+	function optimize(_fnBody) {
+		return _fnBody.replace(/_\+="";/g, '').replace(/=""\+/g, '=').replace(/\+"";/g, ';');
 	}
 
 	function parse(_template, _style) {
 
 		var fn;
-		var fnbody = sanitize(_template);
+		var fnBody = sanitize(_template);
 		var syntaxStyle = syntax[styles[_style]];
 		var syntaxCompiler = new SyntaxFactory(syntaxStyle);
 		var syntaxResolver = syntaxCompiler.tagResolvers;
 
 		for (var i in syntaxResolver) {
-			fnbody = fnbody.replace(syntaxResolver[i][0], syntaxResolver[i][1]);
+			if (syntaxResolver.hasOwnProperty(i)) {
+				fnBody = fnBody.replace(syntaxResolver[i][0], syntaxResolver[i][1]);
+			}
 		}
 
-		fnbody = optimize('var _this=this,_="";_+="' + fnbody + '";return _;');
+		fnBody = optimize('var _this=this,_="";_+="' + fnBody + '";return _;');
 
 		try {
 			/* jshint -W054 */
-			fn = new Function('$tpl', fnbody);
+			fn = new Function('$tpl', fnBody);
 			/* jshint +W054 */
 			fn.deps = syntaxCompiler.getResolvedDependencies();
 
@@ -48,7 +50,7 @@ define(['plugin/syntax/main'], function (SyntaxFactory) {
 		} catch (_error) {
 
 			if (_error instanceof SyntaxError) {
-				_error.message += ' in "' + fnbody + '"';
+				_error.message += ' in "' + fnBody + '"';
 			}
 
 			throw 'Template compilation error: ' + _error.stack || _error.message;

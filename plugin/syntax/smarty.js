@@ -5,8 +5,10 @@ define(function () {
 		this.tagResolvers = {};
 		this.deps = [];
 
-		for (var i in this.tagDefinisions) {
-			this.tagResolvers[i] = this.compileTag(i, _tagReplacementTable[i]);
+		for (var i in this.tagDefinitions) {
+			if (this.tagDefinitions.hasOwnProperty(i)) {
+				this.tagResolvers[i] = this.compileTag(i, _tagReplacementTable[i]);
+			}
 		}
 	}
 
@@ -14,7 +16,7 @@ define(function () {
 
 		compileTag: function(_tagType, _tagReplacement) {
 			return [
-				new RegExp('{' + this.tagDefinisions[_tagType] + '}', 'g'),
+				new RegExp('{' + this.tagDefinitions[_tagType] + '}', 'g'),
 				this.giveContext(_tagReplacement)
 			];
 		},
@@ -23,7 +25,7 @@ define(function () {
 			return this.deps || [];
 		},
 
-		tagDefinisions: {
+		tagDefinitions: {
 			conditional: 'if\\s+(.+?)',
 			conditionalElse: 'else',
 			conditionalElseIf: 'else\\s+(.+?)',

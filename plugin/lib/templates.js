@@ -10,8 +10,7 @@ define(['plugin/lib/i18n'], function (i18n) {
 		}
 
 		/**
-		 * List of dependencies. Dependencies are resolved during
-		 * render phase.
+		 * List of dependencies. Dependencies are resolved during render phase.
 		 * @type {Object}
 		 */
 		this.deps = _fn.deps || [];
@@ -42,10 +41,10 @@ define(['plugin/lib/i18n'], function (i18n) {
 		/**
 		 * Returns information about object in a loop. During iteration
 		 * key, index and total number of items is given.
-		 * @param key
-		 * @param index
-		 * @param total
-		 * @returns {{key: *, index: *, total: *, number: *, last: boolean, first: boolean}}
+		 * @param _key {string|number}
+		 * @param _index {string|number}
+		 * @param _total {number}
+		 * @returns {{key: *, index: *, total: *, number: *, last: boolean, first: boolean, even: boolean, odd: boolean}}
 		 */
 		i: function info(_key, _index, _total) {
 			var number = _index + 1;
@@ -63,8 +62,8 @@ define(['plugin/lib/i18n'], function (i18n) {
 		},
 		/**
 		 * Iterates over objects inside templates.
-		 * @param data
-		 * @param callback
+		 * @param _data {object}
+		 * @param _callback {function}
 		 */
 		e: function each(_data, _callback) {
 			var total;
@@ -89,7 +88,7 @@ define(['plugin/lib/i18n'], function (i18n) {
 		},
 		/**
 		 * Calculates total number of items in the given object.
-		 * @param object
+		 * @param _object {object}
 		 * @returns {number}
 		 */
 		c: function count(_object) {
@@ -108,11 +107,10 @@ define(['plugin/lib/i18n'], function (i18n) {
 			return counter;
 		},
 		/**
-		 * Helper function to fetch additional template. Used by
-		 * {include} statement.
-		 * @param moduleName
-		 * @param data
-		 * @returns {String}
+		 * Helper function to fetch additional template. Used by {include} statement.
+		 * @param _moduleIndex {number}
+		 * @param _data {object}
+		 * @returns {string} Template rendered with provided data
 		 */
 		f: function fetch(_moduleIndex, _data) {
 			var fn = this.includes[_moduleIndex].fn;

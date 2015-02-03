@@ -11,21 +11,23 @@ pluginSyntaxSmarty = function () {
   function Smarty(_tagReplacementTable) {
     this.tagResolvers = {};
     this.deps = [];
-    for (var i in this.tagDefinisions) {
-      this.tagResolvers[i] = this.compileTag(i, _tagReplacementTable[i]);
+    for (var i in this.tagDefinitions) {
+      if (this.tagDefinitions.hasOwnProperty(i)) {
+        this.tagResolvers[i] = this.compileTag(i, _tagReplacementTable[i]);
+      }
     }
   }
   Smarty.prototype = {
     compileTag: function (_tagType, _tagReplacement) {
       return [
-        new RegExp('{' + this.tagDefinisions[_tagType] + '}', 'g'),
+        new RegExp('{' + this.tagDefinitions[_tagType] + '}', 'g'),
         this.giveContext(_tagReplacement)
       ];
     },
     getResolvedDependencies: function () {
       return this.deps || [];
     },
-    tagDefinisions: {
+    tagDefinitions: {
       conditional: 'if\\s+(.+?)',
       conditionalElse: 'else',
       conditionalElseIf: 'else\\s+(.+?)',
@@ -48,14 +50,16 @@ pluginSyntaxTwig = function () {
   function Twig(_tagReplacementTable) {
     this.tagResolvers = [];
     this.deps = [];
-    for (var i in this.tagDefinisions) {
-      this.tagResolvers[i] = this.compileTag(i, _tagReplacementTable[i]);
+    for (var i in this.tagDefinitions) {
+      if (this.tagDefinitions.hasOwnProperty(i)) {
+        this.tagResolvers[i] = this.compileTag(i, _tagReplacementTable[i]);
+      }
     }
   }
   Twig.prototype = {
     compileTag: function (_tagType, _tagReplacement) {
       var regexp;
-      var expression = this.tagDefinisions[_tagType];
+      var expression = this.tagDefinitions[_tagType];
       var search = expression;
       var replace = _tagReplacement;
       if (expression instanceof Array) {
@@ -77,7 +81,7 @@ pluginSyntaxTwig = function () {
     getResolvedDependencies: function () {
       return this.deps || [];
     },
-    tagDefinisions: {
+    tagDefinitions: {
       conditional: 'if\\s+(.+?)',
       conditionalElse: 'else',
       conditionalElseIf: 'else\\s+(.+?)',
@@ -148,8 +152,9 @@ pluginSyntaxMain = function (Smarty, Twig) {
         data = variablesToJSON(_variables);
       }
       // TODO: Template should be configurable: view! and .tpl should not be hardcoded.
+      // // https://github.com/eskypl/glide-templates/issues/6
       this.deps.push('view!' + _templateName + '.tpl');
-      return '"+_this.f(' + (this.deps.length - 1) + ',' + (data ? data : '$tpl') + ')+"';  //return '';
+      return '"+_this.f(' + (this.deps.length - 1) + ',' + (data ? data : '$tpl') + ')+"';
     },
     translate: function (_string, _key, _variables) {
       var data = '';
@@ -200,7 +205,7 @@ pluginSyntaxMain = function (Smarty, Twig) {
     }
     var syntaxName = _syntaxName.toLowerCase();
     if (!registry[syntaxName]) {
-      throw 'Unsupported templateing syntax style';
+      throw 'Unsupported templating syntax style';
     }
     return new registry[syntaxName](tagReplacementTable);
   };
@@ -225,28 +230,30 @@ pluginLibCompiler = function (SyntaxFactory) {
     }
     return _template;
   }
-  function optimize(_fnbody) {
-    return _fnbody.replace(/_\+="";/g, '').replace(/=""\+/g, '=').replace(/\+"";/g, ';');
+  function optimize(_fnBody) {
+    return _fnBody.replace(/_\+="";/g, '').replace(/=""\+/g, '=').replace(/\+"";/g, ';');
   }
   function parse(_template, _style) {
     var fn;
-    var fnbody = sanitize(_template);
+    var fnBody = sanitize(_template);
     var syntaxStyle = syntax[styles[_style]];
     var syntaxCompiler = new SyntaxFactory(syntaxStyle);
     var syntaxResolver = syntaxCompiler.tagResolvers;
     for (var i in syntaxResolver) {
-      fnbody = fnbody.replace(syntaxResolver[i][0], syntaxResolver[i][1]);
+      if (syntaxResolver.hasOwnProperty(i)) {
+        fnBody = fnBody.replace(syntaxResolver[i][0], syntaxResolver[i][1]);
+      }
     }
-    fnbody = optimize('var _this=this,_="";_+="' + fnbody + '";return _;');
+    fnBody = optimize('var _this=this,_="";_+="' + fnBody + '";return _;');
     try {
       /* jshint -W054 */
-      fn = new Function('$tpl', fnbody);
+      fn = new Function('$tpl', fnBody);
       /* jshint +W054 */
       fn.deps = syntaxCompiler.getResolvedDependencies();
       return fn;
     } catch (_error) {
       if (_error instanceof SyntaxError) {
-        _error.message += ' in "' + fnbody + '"';
+        _error.message += ' in "' + fnBody + '"';
       }
       throw 'Template compilation error: ' + _error.stack || _error.message;
     }
@@ -267,7 +274,7 @@ pluginBuilder = function (compile) {
   function normalizeModuleName(_pluginName) {
     return function (moduleName) {
       var res = matchModuleName.exec(moduleName);
-      return _pluginName + '!' + (res ? res[1] : name);
+      return _pluginName + '!' + (res ? res[1] : moduleName);
     };
   }
   function moduleNameToCamelCase(_moduleName) {
@@ -278,7 +285,7 @@ pluginBuilder = function (compile) {
   return {
     version: '1.0.0',
     compile: compile,
-    load: function (_name, _req, _onload) {
+    load: function (_name, _req, _onLoad) {
       var fs = require.nodeRequire('fs');
       var file;
       try {
@@ -288,7 +295,7 @@ pluginBuilder = function (compile) {
           file = file.substring(1);
         }
       } catch (_error) {
-        _onload.error(_error);
+        _onLoad.error(_error);
       }
       //var compile = require.nodeRequire(_req.toUrl('plugin/lib/compiler'));
       var fn = compile(file, extension(_name));
@@ -296,22 +303,22 @@ pluginBuilder = function (compile) {
       if (!!fn.deps.length) {
         _req(fn.deps);
       }
-      _onload();
+      _onLoad();
     },
     write: function (_pluginName, _moduleName, _write) {
       var fn = buildMap[_moduleName];
       var normalizedName = _moduleName.replace(/\.\w+$/i, '');
       var functionName = moduleNameToCamelCase(_moduleName);
-      var fnbody = fn.toString().replace('function anonymous', 'function ' + functionName);
-      var fndeps = '';
-      var fnincl = '';
+      var fnBody = fn.toString().replace('function anonymous', 'function ' + functionName);
+      var fnDependencies = '';
+      var fnIncludes = '';
       var normalizer;
       if (!!fn.deps.length) {
         normalizer = normalizeModuleName(_pluginName);
-        fndeps = '["' + fn.deps.map(normalizer).join('","') + '"],';
-        fnincl = functionName + '.includes=arguments;';
+        fnDependencies = '["' + fn.deps.map(normalizer).join('","') + '"],';
+        fnIncludes = functionName + '.includes=arguments;';
       }
-      _write.asModule(normalizedName, 'define(' + fndeps + 'function(){' + fnbody + ';' + fnincl + 'return ' + functionName + ';});');
+      _write.asModule(normalizedName, 'define(' + fnDependencies + 'function(){' + fnBody + ';' + fnIncludes + 'return ' + functionName + ';});');
     }
   };
 }(pluginLibCompiler);

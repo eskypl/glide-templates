@@ -15,9 +15,9 @@ define(['plugin/lib/templates'], function (Template) {
 		normalize: function(_name) {
 			return _name.replace(fileExtension, '');
 		},
-		load: function (_name, _req, _onload) {
+		load: function (_name, _req, _onLoad) {
 			_req([_name], function (tpl) {
-				_onload(new Template(tpl, _name));
+				_onLoad(new Template(tpl, _name));
 			});
 		}
 	};
