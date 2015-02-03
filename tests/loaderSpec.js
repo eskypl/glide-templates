@@ -1,30 +1,42 @@
 /* global insert */
 /* jshint -W024, -W030 */
+
+
+define([
+	'view!tests/fixtures/table.tpl',
+	//'view!fixtures/include.tpl',
+	'view!tests/fixtures/deep-include.tpl',
+	'tests/fixtures/colors'
+], function (tpl, deep, data) {
+
+
+
+
 describe('AMD loader plugin', function () {
 	'use strict';
 
 	describe('when requesting template', function () {
 
-		var tpl;
-		var inc;
-		var deep;
-		var data;
+		//var tpl;
+		//var inc;
+		//var deep;
+		//var data;
 
-		beforeEach(function (_done) {
-			require([
-				'view!test/examples/table.tpl',
-				'view!test/examples/include.tpl',
-				'view!test/examples/deep-include.tpl',
-				'test/fixtures/colors'
-			], function () {
-				tpl = arguments[0];
-				inc = arguments[1];
-				deep = arguments[2];
-				data = arguments[3];
-
-				_done();
-			});
-		});
+		//beforeEach(function (_done) {
+		//	require([
+		//		'view!test/examples/table.tpl',
+		//		'view!test/examples/include.tpl',
+		//		'view!test/examples/deep-include.tpl',
+		//		'test/fixtures/colors'
+		//	], function () {
+		//		tpl = arguments[0];
+		//		inc = arguments[1];
+		//		deep = arguments[2];
+		//		data = arguments[3];
+		//
+		//		_done();
+		//	});
+		//});
 
 		it('should load compiled template function', function () {
 			expect(tpl).to.be.a('function');
@@ -34,8 +46,6 @@ describe('AMD loader plugin', function () {
 			tpl(data, function (_error, _result) {
 				expect(_error).to.be.null;
 				expect(_result).to.be.a('string');
-
-				insert.call(tpl, _result, data);
 				_done();
 			});
 		});
@@ -44,8 +54,6 @@ describe('AMD loader plugin', function () {
 			tpl(data.extendWith({showTable: 'summary'}), function (_error, _result) {
 				expect(_error).to.be.null;
 				expect(_result).to.be.a('string');
-
-				insert.call(tpl, _result, data);
 				_done();
 			});
 		});
@@ -54,8 +62,6 @@ describe('AMD loader plugin', function () {
 			tpl(data.extendWith({showTable: 'full'}), function (_error, _result) {
 				expect(_error).to.be.null;
 				expect(_result).to.be.a('string');
-
-				insert.call(tpl, _result, data);
 				_done();
 			});
 		});
@@ -71,4 +77,6 @@ describe('AMD loader plugin', function () {
 
 
 	});
+});
+
 });

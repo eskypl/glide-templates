@@ -2,7 +2,7 @@
  * This loader should be used in browser env (development).
  * It returns compiled templates.
  */
-define(['module', 'plugin/lib/compiler', 'plugin/lib/templates'], function (module, compile, Template) {
+define(['plugin/lib/compiler', 'plugin/lib/templates'], function (compile, Template) {
 	'use strict';
 
 	function extension(filePath) {
@@ -31,6 +31,7 @@ define(['module', 'plugin/lib/compiler', 'plugin/lib/templates'], function (modu
 
 	return {
 		version: '1.0.0',
+		translate: Template.translator.translate,
 		load: function (_moduleName, _req, _onload) {
 			var xhr = new XMLHttpRequest();
 			xhr.open('GET', _req.toUrl(_moduleName), true);
