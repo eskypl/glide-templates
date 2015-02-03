@@ -131,5 +131,5 @@ module.exports = function (grunt) {
 	grunt.registerTask('lint', ['jshint']);
 	grunt.registerTask('test', ['karma']);
 	grunt.registerTask('travis', ['karma', 'copy:lcovInfo', 'codeclimate']);
-	grunt.registerTask('default', ['lint', 'test']);
+	grunt.registerTask('default', ['lint', 'test', 'dist']);
 };
