@@ -5,7 +5,6 @@
     module.exports = factory();
   }
 }(this, function () {
-  
 var pluginSyntaxSmarty, pluginSyntaxTwig, pluginSyntaxMain, pluginLibCompiler, pluginLibI18n, pluginLibTemplates, pluginLoader;
 pluginSyntaxSmarty = function () {
   
@@ -148,6 +147,7 @@ pluginSyntaxMain = function (Smarty, Twig) {
       if (_variables) {
         data = variablesToJSON(_variables);
       }
+      // TODO: Template should be configurable: view! and .tpl should not be hardcoded.
       this.deps.push('view!' + _templateName + '.tpl');
       return '"+_this.f(' + (this.deps.length - 1) + ',' + (data ? data : '$tpl') + ')+"';  //return '';
     },
@@ -317,6 +317,9 @@ pluginLibTemplates = function (i18n) {
   function Template(_fn, _name) {
     var ctx;
     var tpl;
+    if (!this || !(this instanceof Template)) {
+      throw new Error('Template not initialized with new');
+    }
     /**
      * List of dependencies. Dependencies are resolved during
      * render phase.
@@ -340,6 +343,7 @@ pluginLibTemplates = function (i18n) {
     tpl.fn = _fn;
     return tpl;
   }
+  Template.translator = i18n;
   Template.prototype = {
     /**
      * Returns information about object in a loop. During iteration
@@ -424,7 +428,7 @@ pluginLibTemplates = function (i18n) {
   };
   return Template;
 }(pluginLibI18n);
-pluginLoader = function (module, compile, Template) {
+pluginLoader = function (compile, Template) {
   
   function extension(filePath) {
     var ext = filePath.match(/\.(\w+)$/i);
@@ -449,6 +453,7 @@ pluginLoader = function (module, compile, Template) {
   }
   return {
     version: '1.0.0',
+    translate: Template.translator.translate,
     load: function (_moduleName, _req, _onload) {
       var xhr = new XMLHttpRequest();
       xhr.open('GET', _req.toUrl(_moduleName), true);
@@ -468,6 +473,6 @@ pluginLoader = function (module, compile, Template) {
       xhr.send(null);
     }
   };
-}({}, pluginLibCompiler, pluginLibTemplates);
+}(pluginLibCompiler, pluginLibTemplates);
 return pluginLoader;
 }));

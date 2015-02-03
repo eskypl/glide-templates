@@ -11,6 +11,7 @@ define(['plugin/lib/templates'], function (Template) {
 	return {
 		version: '1.0.0',
 		pluginBuilder: 'builder',
+		translate: Template.translator.translate,
 		normalize: function(_name) {
 			return _name.replace(fileExtension, '');
 		},

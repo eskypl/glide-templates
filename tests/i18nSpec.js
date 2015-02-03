@@ -1,6 +1,6 @@
-require(['plugin/lib/i18n'], function (i18n) {
+define(['view'], function (view) {
 
-	var translate = i18n.translate;
+	var translate = view.translate;
 
 	describe('i18n module', function () {
 

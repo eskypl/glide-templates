@@ -5,6 +5,10 @@ define(['plugin/lib/i18n'], function (i18n) {
 		var ctx;
 		var tpl;
 
+		if (!this || !(this instanceof Template)) {
+			throw new Error('Template not initialized with new');
+		}
+
 		/**
 		 * List of dependencies. Dependencies are resolved during
 		 * render phase.
@@ -31,6 +35,8 @@ define(['plugin/lib/i18n'], function (i18n) {
 
 		return tpl;
 	}
+
+	Template.translator = i18n;
 
 	Template.prototype = {
 		/**
