@@ -1,4 +1,4 @@
-module.exports = {
+define({
 	smarty: {
 		invalid: [
 			'{if $tpl.path}'
@@ -47,4 +47,4 @@ module.exports = {
 			'{% i18n \'translations.key\' with {passValue: @key, passData: $tpl} %}'
 		]
 	}
-};
+});

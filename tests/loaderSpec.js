@@ -1,29 +1,16 @@
 /* global insert */
 /* jshint -W024, -W030 */
+
+
 define([
-	'view!test/examples/table.tpl',
-	'view!test/examples/include.tpl',
-	'view!test/examples/deep-include.tpl',
-	'test/fixtures/colors'
-], function (tpl, inc, deep, data) {
+	'view!tests/fixtures/table.tpl',
+	//'view!fixtures/include.tpl',
+	'view!tests/fixtures/deep-include.tpl',
+	'tests/fixtures/colors'
+], function (tpl, deep, data) {
 
 
-Object.prototype.extendWith =  function (object) {
-	for (var i in object) {
-		this[i] = object[i];
-	}
-	return this;
-};
 
-var i18n = {
-	test: {
-		Showing_table_type: 'Table type: {{type}} {$2}.',
-		Showing_table_type_old: 'Table type: {$1} {$2}.',
-		Showing_table_type_old_ext: 'Table type: {1} {2}.',
-		Showing_table_type_new: 'Table type: {{type}} {{info}}.',
-		Showing_table_type_new_ext: 'Table type: {{$type}} {{$info}}.'
-	}
-};
 
 describe('AMD loader plugin', function () {
 	'use strict';

@@ -1,54 +1,15 @@
 /* global insert */
 /* jshint -W024, -W030 */
 define([
-	'view!test/examples/table.tpl',
-	'view!test/examples/include.tpl',
-	'view!test/examples/deep-include.tpl',
-	'test/fixtures/colors'
-], function (tpl, inc, deep, data) {
-
-	Object.prototype.extendWith = function (object) {
-		for (var i in object) {
-			this[i] = object[i];
-		}
-		return this;
-	};
-
-	var i18n = {
-		test: {
-			Showing_table_type: 'Table type: {{type}} {$2}.',
-			Showing_table_type_old: 'Table type: {$1} {$2}.',
-			Showing_table_type_old_ext: 'Table type: {1} {2}.',
-			Showing_table_type_new: 'Table type: {{type}} {{info}}.',
-			Showing_table_type_new_ext: 'Table type: {{$type}} {{$info}}.'
-		}
-	};
+	'view!tests/fixtures/table',
+	'view!tests/fixtures/deep-include',
+	'tests/fixtures/colors'
+], function (tpl, deep, data) {
 
 	describe('AMD optimizer plugin', function () {
 		'use strict';
 
 		describe('when requesting template', function () {
-
-			//var tpl;
-			//var inc;
-			//var deep;
-			//var data;
-			//
-			//beforeEach(function (_done) {
-			//	require([
-			//		'view!test/examples/table.tpl',
-			//		'view!test/examples/include.tpl',
-			//		'view!test/examples/deep-include.tpl',
-			//		'test/fixtures/colors'
-			//	], function () {
-			//		tpl = arguments[0];
-			//		inc = arguments[1];
-			//		deep = arguments[2];
-			//		data = arguments[3];
-			//
-			//		_done();
-			//	});
-			//});
 
 			it('should load compiled template function', function () {
 				expect(tpl).to.be.a('function');

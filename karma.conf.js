@@ -5,7 +5,7 @@ module.exports = function(config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '.grunt/',
+    basePath: '.',
 
 
     // frameworks to use
@@ -15,11 +15,12 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'test/bootstrap.js',
-      {pattern: 'test/browser/*Spec.js', included: false},
-      {pattern: 'test/{examples,fixtures}/*', included: false},
-      //{pattern: 'build.js', included: false},
-      {pattern: 'dist/*.js', included: false}
+      'tests/bootstrap.js',
+      'tests/fixtures/templates.js',
+      'node_modules/chai/chai.js',
+      {pattern: 'plugin/**/*.js', included: false},
+      {pattern: 'tests/{assertions,fixtures}/*', included: false},
+      {pattern: 'tests/**/*Spec.js', included: false}
     ],
 
 
@@ -31,7 +32,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'dist/*.js': ['coverage']
+      'plugin/**/*.js': ['coverage']
     },
 
 
@@ -42,7 +43,7 @@ module.exports = function(config) {
 
 
     coverageReporter: {
-      type: 'html',
+      type: 'lcov',
       dir: 'coverage'
     },
 

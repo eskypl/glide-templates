@@ -61,6 +61,7 @@ define([
 				data = variablesToJSON(_variables);
 			}
 
+			// TODO: Template should be configurable: view! and .tpl should not be hardcoded.
 			this.deps.push('view!' + _templateName + '.tpl');
 			return '"+_this.f(' + (this.deps.length - 1) + ',' + (data ? data : '$tpl') + ')+"';
 			//return '';

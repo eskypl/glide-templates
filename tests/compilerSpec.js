@@ -1,9 +1,16 @@
-/* jshint mocha: true, -W030 */
+///* jshint mocha: true, -W030 */
+//
+//var assertions = require('../assertions/compiler');
+//var fixtures = require('../fixtures/compiler');
+//var chai = require('chai');
+//var expect = chai.expect;
 
-var assertions = require('../assertions/compiler');
-var fixtures = require('../fixtures/compiler');
-var chai = require('chai');
-var expect = chai.expect;
+define([
+	'tests/fixtures/compiler',
+	'tests/assertions/compiler'
+], function (fixtures) {
+
+
 
 describe('Template compiler', function () {
 	'use strict';
@@ -42,4 +49,5 @@ describe('Template compiler', function () {
 		});
 	});
 
+});
 });

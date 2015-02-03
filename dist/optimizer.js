@@ -70,6 +70,9 @@ pluginLibTemplates = function (i18n) {
   function Template(_fn, _name) {
     var ctx;
     var tpl;
+    if (!this || !(this instanceof Template)) {
+      throw new Error('Template not initialized with new');
+    }
     /**
      * List of dependencies. Dependencies are resolved during
      * render phase.

@@ -147,6 +147,7 @@ pluginSyntaxMain = function (Smarty, Twig) {
       if (_variables) {
         data = variablesToJSON(_variables);
       }
+      // TODO: Template should be configurable: view! and .tpl should not be hardcoded.
       this.deps.push('view!' + _templateName + '.tpl');
       return '"+_this.f(' + (this.deps.length - 1) + ',' + (data ? data : '$tpl') + ')+"';  //return '';
     },
@@ -316,6 +317,9 @@ pluginLibTemplates = function (i18n) {
   function Template(_fn, _name) {
     var ctx;
     var tpl;
+    if (!this || !(this instanceof Template)) {
+      throw new Error('Template not initialized with new');
+    }
     /**
      * List of dependencies. Dependencies are resolved during
      * render phase.
