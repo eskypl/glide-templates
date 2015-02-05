@@ -1,5 +1,8 @@
-test
+tests
 plugin
-Gruntfile.js
-.jshintrc
 .editorconfig
+.jshintrc
+.npmrc
+.travis.yml
+Gruntfile.js
+karma.conf.js
