@@ -108,8 +108,8 @@ pluginSyntaxMain = function (Smarty, Twig) {
     smarty: Smarty,
     twig: Twig
   };
-  var space = /\s+/;
-  var jsonObjectSimplePattern = /^{(\s*[a-z][a-z0-9]*:\s*@?[\w\$\.\[\]\(\)]+\s*)(,\s*[a-z][a-z0-9]*:\s*@?[\w\$\.\[\]\(\)]+\s*)*}$/i;
+  var space = /\s+(?=[a-z0-9]\w*=(?:[\$@']))/i;
+  var jsonObjectSimplePattern = /^\{(\s*[a-z0-9]+:\s*[^,]+)(,\s*[a-z0-9]+:\s*[^,]+)*\s*\}$/i;
   function variablesToJSON(_variables) {
     if (true === jsonObjectSimplePattern.test(_variables)) {
       return loopExpression(_variables);
@@ -119,6 +119,9 @@ pluginSyntaxMain = function (Smarty, Twig) {
     var pair;
     for (var i = 0, j = vars.length; i < j; i++) {
       pair = vars[i].split('=');
+      if (!pair || pair.length !== 2) {
+        throw new SyntaxError('Cannot parse tag arguments: ' + vars[i] + ' from ' + _variables);
+      }
       if (pair[1].indexOf('@') === 0) {
         pair[1] = 'i.' + pair[1].substr(1);
       } else if (pair[1].indexOf('$') !== 0) {
@@ -233,10 +236,10 @@ pluginLibCompiler = function (SyntaxFactory) {
   function optimize(_fnBody) {
     return _fnBody.replace(/_\+="";/g, '').replace(/=""\+/g, '=').replace(/\+"";/g, ';');
   }
-  function parse(_template, _style) {
+  function parse(_options) {
     var fn;
-    var fnBody = sanitize(_template);
-    var syntaxStyle = syntax[styles[_style]];
+    var fnBody = sanitize(_options.template);
+    var syntaxStyle = syntax[styles[_options.syntax]];
     var syntaxCompiler = new SyntaxFactory(syntaxStyle);
     var syntaxResolver = syntaxCompiler.tagResolvers;
     for (var i in syntaxResolver) {
@@ -443,7 +446,11 @@ pluginLoader = function (compile, Template) {
     return ext;
   }
   function load(_moduleName, _text, _req, _onLoad) {
-    var templateFn = compile(_text, extension(_moduleName));
+    var templateFn = compile({
+      name: _moduleName,
+      template: _text,
+      syntax: extension(_moduleName)
+    });
     templateFn.includes = [];
     if (templateFn.deps && !!templateFn.deps.length) {
       _req(templateFn.deps, function () {

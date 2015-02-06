@@ -36,6 +36,9 @@ module.exports = function (grunt) {
 		|| readCodeclimateTokenFile();
 
 	grunt.initConfig({
+		clean: {
+			codeCoverage: 'coverage/**'
+		},
 		copy: {
 			lcovInfo: {
 				flatten: true,
@@ -117,6 +120,7 @@ module.exports = function (grunt) {
 	});
 
 	[
+		'grunt-contrib-clean',
 		'grunt-contrib-copy',
 		'grunt-contrib-requirejs',
 		'grunt-contrib-jshint',
@@ -129,7 +133,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('fixtures', ['requirejs:fixtures']);
 	grunt.registerTask('dist', ['build', 'uglify']);
 	grunt.registerTask('lint', ['jshint']);
-	grunt.registerTask('test', ['karma']);
+	grunt.registerTask('test', ['clean:codeCoverage', 'karma']);
 	grunt.registerTask('travis', ['karma', 'copy:lcovInfo', 'codeclimate']);
 	grunt.registerTask('default', ['lint', 'test', 'dist']);
 };
