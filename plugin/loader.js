@@ -14,7 +14,11 @@ define(['plugin/lib/compiler', 'plugin/lib/templates'], function (compile, Templ
 	}
 
 	function load(_moduleName, _text, _req, _onLoad) {
-		var templateFn = compile(_text, extension(_moduleName));
+		var templateFn = compile({
+			name: _moduleName,
+			template: _text,
+			syntax: extension(_moduleName)
+		});
 		templateFn.includes = [];
 		if (templateFn.deps && !!templateFn.deps.length) {
 			_req(templateFn.deps, function () {

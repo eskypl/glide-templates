@@ -23,11 +23,11 @@ define(['plugin/syntax/main'], function (SyntaxFactory) {
 		return _fnBody.replace(/_\+="";/g, '').replace(/=""\+/g, '=').replace(/\+"";/g, ';');
 	}
 
-	function parse(_template, _style) {
+	function parse(_options) {
 
 		var fn;
-		var fnBody = sanitize(_template);
-		var syntaxStyle = syntax[styles[_style]];
+		var fnBody = sanitize(_options.template);
+		var syntaxStyle = syntax[styles[_options.syntax]];
 		var syntaxCompiler = new SyntaxFactory(syntaxStyle);
 		var syntaxResolver = syntaxCompiler.tagResolvers;
 

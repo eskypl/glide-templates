@@ -9,8 +9,8 @@ define([
 		twig: Twig
 	};
 
-	var space = /\s+/;
-	var jsonObjectSimplePattern = /^{(\s*[a-z][a-z0-9]*:\s*@?[\w\$\.\[\]\(\)]+\s*)(,\s*[a-z][a-z0-9]*:\s*@?[\w\$\.\[\]\(\)]+\s*)*}$/i;
+	var space = /\s+(?=[a-z0-9]\w*=(?:[\$@']))/i;
+	var jsonObjectSimplePattern = /^\{(\s*[a-z0-9]+:\s*[^,]+)(,\s*[a-z0-9]+:\s*[^,]+)*\s*\}$/i;
 
 	function variablesToJSON(_variables) {
 
@@ -24,6 +24,9 @@ define([
 
 		for (var i = 0, j = vars.length; i < j; i++) {
 			pair = vars[i].split('=');
+			if (!pair || pair.length !== 2) {
+				throw new SyntaxError('Cannot parse tag arguments: ' + vars[i] + ' from ' + _variables);
+			}
 			if (pair[1].indexOf('@') === 0) {
 				pair[1] = 'i.' + pair[1].substr(1);
 			}

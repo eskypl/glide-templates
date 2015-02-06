@@ -22,7 +22,11 @@ define([
 		var syntax = this.syntax;
 
 		try {
-			fn = compile(template, syntax);
+			fn = compile({
+				name: 'templateFixture',
+				template: template,
+				syntax: syntax
+			});
 			this.fn = fn;
 		} catch (_error) {
 			error = (''+_error).split("\n")[0];

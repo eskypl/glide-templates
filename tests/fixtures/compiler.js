@@ -1,7 +1,8 @@
 define({
 	smarty: {
 		invalid: [
-			'{if $tpl.path}'
+			'{if $tpl.path}',
+			'{include template=name var1=$tpl var2=@index var3="string value"}',
 		],
 		valid: [
 			'{$tpl.path.to.func($tpl.path, \'a\', $tpl.func())}',
@@ -18,6 +19,8 @@ define({
 			'{foreach $tpl.array as $item}{include template=some-template data1=@key data2=$tpl.data}{/foreach}',
 
 			'{include template=some-template}',
+			'{include template=path/to/some/template}',
+			'{include template=name var1=$tpl var2=@index var3=\'string value\'}',
 
 			'{i18n key=translations.long_translation_key}',
 			'{i18n key=translations.key passValue=@key passData=$tpl}'
@@ -25,7 +28,8 @@ define({
 	},
 	twig: {
 		invalid: [
-			'{% if $tpl.path %}'
+			'{% if $tpl.path %}',
+			'{% include \'name\' with { var1: $tpl, var2: @index, var3: "string value" } %}',
 		],
 		valid: [
 			'{{ $tpl.path.to.func($tpl.path, \'a\', $tpl.func()) }}',
@@ -42,6 +46,8 @@ define({
 			'{% for $item in $tpl.array %}{% include \'some-template\' with {data1: @key, data2: $tpl.data} %}{% endfor %}',
 
 			'{% include \'some-template\' %}',
+			'{% include \'path/to/some/template\' %}',
+			'{% include \'name\' with { var1: $tpl, var2: @index, var3: \'string value\' } %}',
 
 			'{% i18n \'translations.long_translation_key\' %}',
 			'{% i18n \'translations.key\' with {passValue: @key, passData: $tpl} %}'

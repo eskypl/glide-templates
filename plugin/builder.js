@@ -47,8 +47,11 @@ define(['plugin/lib/compiler'], function (compile) {
 				_onLoad.error(_error);
 			}
 
-			//var compile = require.nodeRequire(_req.toUrl('plugin/lib/compiler'));
-			var fn = compile(file, extension(_name));
+			var fn = compile({
+				name: _name,
+				template: file,
+				syntax: extension(_name)
+			});
 
 			buildMap[_name] = fn;
 
