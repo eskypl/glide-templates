@@ -1,7 +1,25 @@
 language: node_js
 node_js:
+- '0.12'
 - '0.10'
 install:
 - npm install -g grunt-cli
 - npm install
 script: grunt travis
+env:
+  global:
+    - secure: dGtn7Jc81MzeA743i8deg3owrGXxZZghu1wQ5P7PdXqiSMDVD+O28ybTbEc9DGUsmjrFogLyDvBVGli1UtRMsSY+x/aGca69J4V62hpqMTMqEY0uZOF2QLYtbwVzC3jP+H5iRS4aUupM/JjAdVnMCZc6JbSSEu2WSFSzMZb97l4=
+    - secure: Azv9AJR7asuZGaLziB5ln1lzqYkEdb/wccjZCYGttmR2GuV11uDVFXWGkPQIsO1WHkMSYO4N79zsylUFkw8og6n9Dmv7qIF9HgU49ULo5yP8VER58quMtcZ7NQaZMz6utccWHgGQCUQKpI68Cgq+QCvifJTCo2fRRpxLi8OXwZ0=
+    - secure: YBkNVD3O7iUtEWoQr5ySwMZnBb8dpBm784MuuhKHbYIiYSgrSlkI4QSlTFosKcXX9s7T863GThS5NvzZbHqNRhGkCPqIpHalw/vzlm58NtlaMXmiSID69GoUc1r5UbYIdoReUjUGzWH1JfVCgSOOmKCScoRXAQdQJd7RbgK8hTc=
+addons:
+  sauce_connect: true
+deploy:
+  provider: npm
+  email: $NPM_USER_MAIL
+  api_key:
+    secure: DY5jPrmjzeAGgmv5rk2OlVhQjIptJaCvyfcfTxQzp4y1wE6j2zmSG4xkkHIcrsonRyyW3RRI/IuBZwdwex5OfuJ2qOd3UCJYTr+lVg3QubRBj4XaxloQVoMuYMIclngYZ5Kvnx41NwT1KCu7pTEZdn0VBOKgQRZMafSKBDyIhZU=
+  on:
+    node: 0.12
+    tags: true
+    branch: master
+    repo: eskypl/glide-templates

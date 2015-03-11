@@ -31,22 +31,13 @@ module.exports = function(config) {
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-      'plugin/**/*.js': ['coverage']
-    },
+    preprocessors: {},
 
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['mocha', 'coverage'],
-
-
-    coverageReporter: {
-      type: 'lcov',
-      dir: 'coverage'
-    },
-
+    reporters: ['dots'],
 
     // web server port
     port: 9876,
@@ -64,14 +55,20 @@ module.exports = function(config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
 
+	//sauceLabs: {
+	//  testName: 'glide-templates'
+	//},
+	//captureTimeout: 120000,
+	//customLaunchers: customLaunchers,
 
-    // start these browsers
-    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'],
-
+	// start these browsers
+	// available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+	browsers: ['PhantomJS'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true
+    singleRun: true,
+
+  	captureTimeout: 120000
   });
 };

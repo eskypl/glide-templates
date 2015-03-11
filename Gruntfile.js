@@ -1,6 +1,89 @@
 var fs = require('fs');
 var amdclean = require('amdclean');
 
+var customLaunchers = {
+	'SL_Chrome_win7': {
+		base: 'SauceLabs',
+		browserName: 'chrome',
+		platform: 'windows 7'
+	},
+	'SL_Firefox_win7': {
+		base: 'SauceLabs',
+		browserName: 'firefox',
+		platform: 'windows 7'
+	},
+	// TODO: Chai.js is only IE9+. Switch to expect.js?
+	//'SL_IE_8_win7': {
+	//	base: 'SauceLabs',
+	//	browserName: 'internet explorer',
+	//	version: '8'
+	//}
+	'SL_IE_9_win7': {
+		base: 'SauceLabs',
+		browserName: 'internet explorer',
+		version: '9'
+	},
+	'SL_IE_10_win7': {
+		base: 'SauceLabs',
+		browserName: 'internet explorer',
+		version: '10'
+	},
+	'SL_IE_11_win7': {
+		base: 'SauceLabs',
+		browserName: 'internet explorer',
+		version: '11'
+	}
+};
+
+var karmaConfig = {
+	options: {
+		configFile: 'karma.conf.js'
+	},
+	test: {
+		reporters: ['mocha']
+	},
+	coverage: {
+		preprocessors: {
+			'plugin/**/*.js': ['coverage']
+		},
+		reporters: ['coverage'],
+		coverageReporter: {
+			type: 'lcov',
+			dir: 'coverage'
+		}
+	}
+};
+
+var SAUCE_CONCURRENCY_LIMIT = 3;
+
+var customLaunchersIds = Object.keys(customLaunchers);
+var sauceLabsSets = [];
+var sauceLabsKarmaTargets = [];
+
+while(customLaunchersIds.length) {
+	sauceLabsSets.push(customLaunchersIds.splice(0, SAUCE_CONCURRENCY_LIMIT).reduce(function(acc, key){
+		acc[key] = customLaunchers[key];
+		return acc;
+	}, {}));
+}
+
+sauceLabsSets.forEach(function(launchersSet, i){
+	var setKey = 'sauceLabsSet' + i;
+
+	sauceLabsKarmaTargets.push('karma:' + setKey);
+	karmaConfig[setKey] = {
+		reporters: ['saucelabs'],
+		sauceLabs: {
+			testName: 'glide-templates',
+			startConnect: false
+		},
+		customLaunchers: launchersSet,
+		browsers: Object.keys(launchersSet)
+	}
+});
+
+
+
 function amdCleanFactory(config) {
 	return function (data) {
 		fs.writeFileSync(data.path, amdclean.clean({
@@ -106,11 +189,7 @@ module.exports = function (grunt) {
 		jshint: {
 			all: ['plugin/**/*.js', 'test/**/*Spec.js']
 		},
-		karma: {
-			all: {
-				configFile: 'karma.conf.js'
-			}
-		},
+		karma: karmaConfig,
 		codeclimate: {
 			options: {
 				file: 'coverage/lcov.info',
@@ -133,7 +212,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('fixtures', ['requirejs:fixtures']);
 	grunt.registerTask('dist', ['build', 'uglify']);
 	grunt.registerTask('lint', ['jshint']);
-	grunt.registerTask('test', ['clean:codeCoverage', 'karma']);
-	grunt.registerTask('travis', ['karma', 'copy:lcovInfo', 'codeclimate']);
+	grunt.registerTask('test', ['karma:test']);
+	grunt.registerTask('travis', sauceLabsKarmaTargets.concat(['karma:coverage', 'copy:lcovInfo', 'codeclimate']));
 	grunt.registerTask('default', ['lint', 'test', 'dist']);
 };

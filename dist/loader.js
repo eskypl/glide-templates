@@ -470,8 +470,8 @@ pluginLoader = function (compile, Template) {
       var xhr = new XMLHttpRequest();
       xhr.open('GET', _req.toUrl(_moduleName), true);
       xhr.onreadystatechange = function () {
-        var status = xhr.status || 0;
         if (xhr.readyState === 4) {
+          var status = xhr.status || 0;
           if (status > 399 && status < 600) {
             return _onLoad.error(new Error(_moduleName + ' HTTP status: ' + status));
           }
