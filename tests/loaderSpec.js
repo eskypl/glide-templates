@@ -14,6 +14,11 @@ define([
 				expect(tpl).to.be.a('function');
 			});
 
+			it('should successfully render loaded template function when called with data without callback', function () {
+				var result = tpl(data);
+				expect(result).to.be.a('string');
+			});
+
 			it('should successfully render loaded template function when called with data', function (_done) {
 				tpl(data, function (_error, _result) {
 					expect(_error).to.be.null;

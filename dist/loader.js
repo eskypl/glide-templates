@@ -7,7 +7,7 @@
 }(this, function () {
 var pluginSyntaxSmarty, pluginSyntaxTwig, pluginSyntaxMain, pluginLibCompiler, pluginLibI18n, pluginLibTemplates, pluginLoader;
 pluginSyntaxSmarty = function () {
-  
+  'use strict';
   function Smarty(_tagReplacementTable) {
     this.tagResolvers = {};
     this.deps = [];
@@ -46,7 +46,7 @@ pluginSyntaxSmarty = function () {
   return Smarty;
 }();
 pluginSyntaxTwig = function () {
-  
+  'use strict';
   function Twig(_tagReplacementTable) {
     this.tagResolvers = [];
     this.deps = [];
@@ -103,7 +103,7 @@ pluginSyntaxTwig = function () {
   return Twig;
 }();
 pluginSyntaxMain = function (Smarty, Twig) {
-  
+  'use strict';
   var registry = {
     smarty: Smarty,
     twig: Twig
@@ -214,7 +214,7 @@ pluginSyntaxMain = function (Smarty, Twig) {
   };
 }(pluginSyntaxSmarty, pluginSyntaxTwig);
 pluginLibCompiler = function (SyntaxFactory) {
-  
+  'use strict';
   var whitespace = /^\s*|\r|\n|\t|\s*$/g;
   var quotes = /"/g;
   var amp = /&amp;/g;
@@ -264,7 +264,7 @@ pluginLibCompiler = function (SyntaxFactory) {
   return parse;
 }(pluginSyntaxMain);
 pluginLibI18n = function () {
-  
+  'use strict';
   var doc = typeof document === 'object' ? document : false;
   var jsonPathSep = '.';
   var debugMode = doc && doc.cookie.indexOf('translationDebugMode=debug;') !== -1;
@@ -323,7 +323,7 @@ pluginLibI18n = function () {
   };
 }();
 pluginLibTemplates = function (i18n) {
-  
+  'use strict';
   function Template(_fn, _name) {
     var ctx;
     var tpl;
@@ -338,6 +338,9 @@ pluginLibTemplates = function (i18n) {
     this.includes = _fn.includes || [];
     ctx = this;
     tpl = function template(_data, _cb) {
+      if (!_cb) {
+        return _fn.call(ctx, _data);
+      }
       try {
         _cb(null, _fn.call(ctx, _data));
       } catch (_error) {
@@ -437,7 +440,7 @@ pluginLibTemplates = function (i18n) {
   return Template;
 }(pluginLibI18n);
 pluginLoader = function (compile, Template) {
-  
+  'use strict';
   function extension(filePath) {
     var ext = filePath.match(/\.(\w+)$/i);
     if (ext && ext.length) {

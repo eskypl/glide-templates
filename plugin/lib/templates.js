@@ -18,6 +18,10 @@ define(['plugin/lib/i18n'], function (i18n) {
 
 		ctx = this;
 		tpl = function template(_data, _cb) {
+			if (!_cb) {
+				return _fn.call(ctx, _data);
+			}
+
 			try {
 				_cb(null, _fn.call(ctx, _data));
 			} catch (_error) {
