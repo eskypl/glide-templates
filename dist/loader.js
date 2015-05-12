@@ -270,7 +270,7 @@ pluginLibI18n = function () {
   var debugMode = doc && doc.cookie.indexOf('translationDebugMode=debug;') !== -1;
   var variableHolder = /{\$?(\w+)}|{{\$?(\w+)}}/g;
   var memory = {};
-  var translations = typeof i18n === 'object' ? i18n : {};
+  var translations = typeof i18n !== 'undefined' ? i18n : {};
   function deepExplore(_path, _data) {
     var key = _path.shift();
     if (_path.length && typeof _data[key] !== 'string') {
