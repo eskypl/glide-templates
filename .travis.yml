@@ -6,12 +6,11 @@ install:
 - npm install -g grunt-cli
 - npm install
 script: grunt travis
-env:
-  global:
-  - secure: Yc2z/Ye4O6N743YsjOe9C9xrVvPAmRvhtMcPwxFHjQ05PrVryHaC1ID45zUyzYM/xdc5cEnj8dQV8C4IGMjUr3iJnN0/V98IGOF2UycYdCZ2LaT5UNj4odocpNjprjHNHOz7SCj/9/BfO/gxL/2vGPs0eAZyGsER63m00zFrujo=
-  - secure: T9+LNCYQjY83wDiwUFy7nOkPIRSdhSjU+Kp+CT4I+8I/WYLh2dFNzL530WX2puzvmlAnkD3tTWRxbsA/cmnaA8PAxjANxbFz5yHTKAlsNTx7IJsHo43w1f5d0k8WN6PjAPCvYhj3sFrymDU09x2SBQXsrWHcA9oVB3/LQPc3prI=
 addons:
-  sauce_connect: true
+  sauce_connect:
+    username: saucelabs_esky
+    access_key:
+      secure: AGufhH2XdB2jLnTqU4uoUTPCNEjMhNzvvqL9FhE9XJnOizQf5CkGPyF/xoePQxvGbtbthTJJ2iL+Pcq2G+r06zoWkQ6oM18cGuPjHW0pU3i/cyeycyThTH3eOvYA1FAyQ9VOqnfFhQx7aVVfLhqTjPpNuk/xgO+igqAO3dZFN/E=
   code_climate:
     repo_token:
       secure: ZFFqkP1PCspj3UGAEuCEkldP0Jy70SZLS2tsBQwBVuMHIK9gcsknXoCyo47kpUQo2N1HD9XQoWlenY/0nDtyGooukfGp0GJAt92wC04/wIquA54UaC7Mtlz8qJsVFEqDlfe5P3DyMfvSfbsbrL+/GGOoNS7eKPNKwRjNPr1MFx0=
@@ -27,4 +26,4 @@ deploy:
     branch: master
     repo: eskypl/glide-templates
 after_script:
-  - cat coverage/lcov.info | codeclimate
+  - codeclimate < coverage/lcov.info
