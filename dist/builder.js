@@ -7,7 +7,7 @@
 }(this, function () {
 var pluginSyntaxSmarty, pluginSyntaxTwig, pluginSyntaxMain, pluginLibCompiler, pluginBuilder;
 pluginSyntaxSmarty = function () {
-  
+  'use strict';
   function Smarty(_tagReplacementTable) {
     this.tagResolvers = {};
     this.deps = [];
@@ -46,7 +46,7 @@ pluginSyntaxSmarty = function () {
   return Smarty;
 }();
 pluginSyntaxTwig = function () {
-  
+  'use strict';
   function Twig(_tagReplacementTable) {
     this.tagResolvers = [];
     this.deps = [];
@@ -103,7 +103,7 @@ pluginSyntaxTwig = function () {
   return Twig;
 }();
 pluginSyntaxMain = function (Smarty, Twig) {
-  
+  'use strict';
   var registry = {
     smarty: Smarty,
     twig: Twig
@@ -214,7 +214,7 @@ pluginSyntaxMain = function (Smarty, Twig) {
   };
 }(pluginSyntaxSmarty, pluginSyntaxTwig);
 pluginLibCompiler = function (SyntaxFactory) {
-  
+  'use strict';
   var whitespace = /^\s*|\r|\n|\t|\s*$/g;
   var quotes = /"/g;
   var amp = /&amp;/g;
@@ -264,7 +264,7 @@ pluginLibCompiler = function (SyntaxFactory) {
   return parse;
 }(pluginSyntaxMain);
 pluginBuilder = function (compile) {
-  
+  'use strict';
   var buildMap = {};
   var matchModuleName = /^\w+!(.+?)\.\w+$/i;
   function extension(filePath) {

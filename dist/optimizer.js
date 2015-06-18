@@ -8,7 +8,7 @@
 /* globals i18n, document */
 var pluginLibI18n, pluginLibTemplates, pluginOptimizer;
 pluginLibI18n = function () {
-  
+  'use strict';
   var doc = typeof document === 'object' ? document : false;
   var jsonPathSep = '.';
   var debugMode = doc && doc.cookie.indexOf('translationDebugMode=debug;') !== -1;
@@ -67,7 +67,7 @@ pluginLibI18n = function () {
   };
 }();
 pluginLibTemplates = function (i18n) {
-  
+  'use strict';
   function Template(_fn, _name) {
     var ctx;
     var tpl;
@@ -82,6 +82,9 @@ pluginLibTemplates = function (i18n) {
     this.includes = _fn.includes || [];
     ctx = this;
     tpl = function template(_data, _cb) {
+      if (!_cb) {
+        return _fn.call(ctx, _data);
+      }
       try {
         _cb(null, _fn.call(ctx, _data));
       } catch (_error) {
@@ -181,7 +184,7 @@ pluginLibTemplates = function (i18n) {
   return Template;
 }(pluginLibI18n);
 pluginOptimizer = function (Template) {
-  
+  'use strict';
   var fileExtension = /\.\w+$/i;
   return {
     version: '1.0.0',
