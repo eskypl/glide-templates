@@ -78,12 +78,12 @@ if (env.TRAVIS && env.TRAVIS_PULL_REQUEST === 'false') {
 			sauceLabs: {
 				testName: 'glide-templates',
 				startConnect: false,
-				recordScreenshots: false
-				//connectOptions: {
-				//	username: process.env.SAUCE_USERNAME,
-				//	accessKey: process.env.SAUCE_ACCESS_KEY,
-				//	tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
-				//}
+				recordScreenshots: false,
+				connectOptions: {
+					username: process.env.SAUCE_USERNAME,
+					accessKey: process.env.SAUCE_ACCESS_KEY,
+					tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
+				}
 			},
 			customLaunchers: launchersSet,
 			browsers: Object.keys(launchersSet)
