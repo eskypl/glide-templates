@@ -8,8 +8,8 @@ install:
 script: grunt travis
 env:
   global:
-  - secure: Yc2z/Ye4O6N743YsjOe9C9xrVvPAmRvhtMcPwxFHjQ05PrVryHaC1ID45zUyzYM/xdc5cEnj8dQV8C4IGMjUr3iJnN0/V98IGOF2UycYdCZ2LaT5UNj4odocpNjprjHNHOz7SCj/9/BfO/gxL/2vGPs0eAZyGsER63m00zFrujo=
-  - secure: T9+LNCYQjY83wDiwUFy7nOkPIRSdhSjU+Kp+CT4I+8I/WYLh2dFNzL530WX2puzvmlAnkD3tTWRxbsA/cmnaA8PAxjANxbFz5yHTKAlsNTx7IJsHo43w1f5d0k8WN6PjAPCvYhj3sFrymDU09x2SBQXsrWHcA9oVB3/LQPc3prI=
+  - secure: gcwGJYJdGIcsYydabV7nvh4Z3aHCWSb6Bs1DvNGsCTDhw/a3uks2m0gUNzEQFP0pE5BnOT5svvHsj3K56G4Dy77UXsasoU/FpduZ5PGPdUZNdu5GSAV7SXv7uoU9nlJfwSOhb99ddfdLDaHfae8hA50d6ZtXA4h0Wpyk9G4OW5k=
+  - secure: ZPI5ruBs1hZA3tB2qlsvpwxzOP4FBVNpKh/2BQzM7euO0Ut38IABOiBMZjPFP3z/6eG8h0Wq8PPUmL+TuTC7KIy/sPrZUmQ+EYTBIaDx7UTCarSXl6URZezJeqUcFTUBY6NI7fMDeiIX5p7NzDCSL2tVM2AejVtqOc0DU086OmY=
 addons:
   sauce_connect: true
   code_climate:
