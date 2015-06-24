@@ -273,7 +273,7 @@ pluginLibI18n = function () {
   var translations = typeof i18n !== 'undefined' ? i18n : {};
   function deepExplore(_path, _data) {
     var key = _path.shift();
-    if (_path.length && typeof _data[key] !== 'string') {
+    if (_path.length && _data[key] && typeof _data[key] !== 'string') {
       return deepExplore(_path, _data[key]);
     } else {
       return _data[key];
